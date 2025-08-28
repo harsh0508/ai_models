@@ -5,6 +5,8 @@
 #include <vector>    
 #include <sstream>
 #include <iostream>
+#include <unordered_map>
+
 using namespace std;
 
 
@@ -46,7 +48,8 @@ struct Dataset {
 
 vector<string> readCsv(){
     ifstream file("data.csv");  // Open CSV file
-    string line; // 
+    string line; 
+    string headerLine;
     vector<string> row;
 
     if(!file.is_open()){
@@ -57,11 +60,35 @@ vector<string> readCsv(){
         cout<<"was able to open file "<< endl;
         
     }
-    if(!getline(file,line)){
+    if(!getline(file,headerLine)){
         // what does getLine do 
         throw runtime_error("Empty_CSV");
     }
-    vector<string> headers = parseCSVLine(line);
+    vector<string> headers = parseCSVLine(headerLine);
+
+    unordered_map<string,int> idx;
+
+    for(int i =0 ; i < (int)headers.size() ; ++i) idx[headers[i]] =  i;
+    // incremented all headers inder above here ?
+
+    // below 2 should be in intializer
+    vector<string> want = {
+        "bedrooms","bathrooms","sqft_living","sqft_lot","floors",
+        "waterfront","view","condition","sqft_above","sqft_basement",
+        "yr_built","yr_renovated"
+    };
+
+    string target = 'price';
+
+    for(auto& c : want){
+        if(!idx.count(c)) throw runtime_error("Missing req feature in col" + c);
+    }
+    if(!idx.count(target)) throw runtime_error("Missing taget column: " + target);
+
+    Dataset d ; 
+    d.feature_name = want;
+
+    
 
     // while(getline(file,line)){
     //     // what does getline do ?---> 
