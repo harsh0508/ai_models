@@ -3,6 +3,7 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import heapq
+import time
 
 
 
@@ -10,6 +11,7 @@ import heapq
 
 def UniformCostSearch(graph , start , end):
     
+    start_time = time.perf_counter()
     #handle edge case
     if(start == end):
         print([start],0)
@@ -29,6 +31,7 @@ def UniformCostSearch(graph , start , end):
         if(newNode[1] not in visited):
             # if last node is visited exit !
             if(newNode[2][len(newNode[2])-1] == end):
+                print("elapsed time is ", time.perf_counter()-start_time," seconds")
                 print(newNode[2],newNode[0])
                 return
         cost = newNode[0]
@@ -79,7 +82,7 @@ plt.axis("off")
 plt.tight_layout()
 plt.show(block=False)
 # show plot for 10 sec and then close 
-plt.pause(10)
+plt.pause(5)
 plt.close()
 
 
@@ -98,4 +101,4 @@ DummyGraph = {
     "H": []
 }
 
-UniformCostSearch(networkGraph, "Delhi" , "Thiruvananthapuram")
+UniformCostSearch(networkGraph, "Patna" , "Thiruvananthapuram")
