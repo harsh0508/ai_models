@@ -15,14 +15,16 @@ def UniformCostSearch(graph , start , end):
     priority_queue = []
 
     visited.append(start)
-
+    print(start)
     for node in graph[start]:
         if(node[0] not in visited):
             heapq.heappush(priority_queue , (node[1],node[0])) # priotity , task
+            # handle initial visited here # ***
 
     while len(priority_queue) != 0:
         newNode = heapq.heappop(priority_queue)
         visited.append(newNode[1])
+        print(newNode[1])
         cost = newNode[0]
         for node in graph[newNode[1]]:
             if(node[0] not in visited):
