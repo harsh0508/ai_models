@@ -10,31 +10,35 @@ import heapq
 
 def UniformCostSearch(graph , start , end):
     
+    #handle edge case
+    if(start == end):
+        print([start],0)
+        return
+    
     # store visted here
     visited = []
     priority_queue = []
 
     visited.append(start)
-    print(start)
     for node in graph[start]:
         if(node[0] not in visited):
             heapq.heappush(priority_queue , (node[1],node[0],[start,node[0]])) # priotity , task
-            # handle initial visited here # ***
 
     while len(priority_queue) != 0:
         newNode = heapq.heappop(priority_queue)
         if(newNode[1] not in visited):
-            print(newNode[2])
-            visited.append(newNode[1])
+            # if last node is visited exit !
+            if(newNode[2][len(newNode[2])-1] == end):
+                print(newNode[2],newNode[0])
+                return
         cost = newNode[0]
         for node in graph[newNode[1]]:
             if(node[0] not in visited):
                 heapq.heappush(priority_queue , (node[1]+cost , node[0], newNode[2] + [node[0]]))
             
 
-    # print(heapq.heappop(priority_queue))
-
-
+def AStar(graph,hurestic,start,end):
+    return
 
 
 
@@ -71,12 +75,12 @@ edge_labels = nx.get_edge_attributes(G, 'weight')
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
 
 # display
-# plt.axis("off")
-# plt.tight_layout()
-# plt.show(block=False)
-# # show plot for 10 sec and then close 
-# plt.pause(10)
-# plt.close()
+plt.axis("off")
+plt.tight_layout()
+plt.show(block=False)
+# show plot for 10 sec and then close 
+plt.pause(10)
+plt.close()
 
 
 
@@ -94,4 +98,4 @@ DummyGraph = {
     "H": []
 }
 
-UniformCostSearch(DummyGraph, "A" , "F")
+UniformCostSearch(networkGraph, "Delhi" , "Thiruvananthapuram")
