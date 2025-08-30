@@ -30,7 +30,9 @@ def UniformCostSearch(graph , start , end):
         newNode = heapq.heappop(priority_queue)
         if(newNode[1] not in visited):
             # if last node is visited exit !
+            visited.append(newNode[1])
             if(newNode[2][len(newNode[2])-1] == end):
+                print(visited)
                 print("elapsed time is ", time.perf_counter()-start_time," seconds")
                 print(newNode[2],newNode[0])
                 return
@@ -82,7 +84,7 @@ plt.axis("off")
 plt.tight_layout()
 plt.show(block=False)
 # show plot for 10 sec and then close 
-plt.pause(5)
+plt.pause(10)
 plt.close()
 
 
@@ -102,3 +104,5 @@ DummyGraph = {
 }
 
 UniformCostSearch(networkGraph, "Patna" , "Thiruvananthapuram")
+
+AStar(networkGraph,DummyGraph,"Patna" , "Thiruvananthapuram")
