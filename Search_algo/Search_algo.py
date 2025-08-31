@@ -43,15 +43,49 @@ def UniformCostSearch(graph , start , end):
             
 
 def AStar(graph,hurestic,start,end):
+    start_time = time.perf_counter()
+    visited = []
+    priorityQueue = []
+
+    visited.append(start)
+    for node in graph[start]:
+        heapq.heappush(priorityQueue,(node[1]+hurestic[node[0]] , node[0] , [start,node[0]]))
+    
+
+    while len(priorityQueue) != 0:
+        newNode = heapq.heappop(priorityQueue)
+        if(newNode[1] not in visited):
+            # if last node is visited exit !
+            visited.append(newNode[1])
+            if(newNode[2][len(newNode[2])-1] == end):
+                print(visited)
+                print("elapsed time is ", time.perf_counter()-start_time," seconds")
+                print(newNode[2],newNode[0])
+                return
+        cost = newNode[0]
+        for node in graph[newNode[1]]:
+            if(node[0] not in visited):
+                heapq.heappush(priorityQueue , (node[1]+cost+hurestic[node[0]] , node[0], newNode[2] + [node[0]]))
     return
 
 
 
 datafile = pd.read_csv('../Dataset/indian-cities-dataset.csv')
+hurestic_distance = pd.read_csv('../Dataset/Hurestic_distance-Indian-cities.csv')
 G = nx.Graph()
 
 # create a graph form csv to make digestable for algorithm
 networkGraph = {}
+
+
+# create a hurestic graph
+hurestic_graph  ={}
+
+for _,row in hurestic_distance.iterrows():
+    # for Thiruvananthapuram
+    hurestic_graph[row["Origin"]] = row["Heuristic_Distance_km"]
+
+# print(hurestic_graph)
 
 for _,row in datafile.iterrows():
     G.add_edge(row["Origin"],row["Destination"],weight =row["Distance"])
@@ -82,10 +116,10 @@ nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
 # display
 plt.axis("off")
 plt.tight_layout()
-plt.show(block=False)
-# show plot for 10 sec and then close 
-plt.pause(10)
-plt.close()
+# plt.show(block=False)
+# # show plot for 10 sec and then close 
+# plt.pause(10)
+# plt.close()
 
 
 
@@ -105,4 +139,4 @@ DummyGraph = {
 
 UniformCostSearch(networkGraph, "Patna" , "Thiruvananthapuram")
 
-AStar(networkGraph,DummyGraph,"Patna" , "Thiruvananthapuram")
+AStar(networkGraph,hurestic_graph,"Patna" , "Thiruvananthapuram")
