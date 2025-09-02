@@ -1,5 +1,5 @@
+from collections import deque
 import pandas as pd
-import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import heapq
@@ -69,10 +69,35 @@ def AStar(graph,hurestic,start,end):
     return
 
 
+def dfs(graph,start,end):
+    visited = set()
+    queue = deque()
+    path = []
+    queue.appendleft(start)
+
+    while queue:
+        ele = queue.pop()
+        if ele not in visited:
+            visited.add(ele)
+            path.append(ele)
+            
+        nodes = graph[ele]
+        for node in nodes:
+            if node[0] not in visited:
+                if node[0] == end:
+                    print('reached end')
+                    visited.add(node[0])
+                    print(path)
+                    return
+                
+                visited.add(node[0])
+                path.append(node[0])
+                queue.appendleft(node[0])
+    return 
 
 datafile = pd.read_csv('../Dataset/indian-cities-dataset.csv')
 hurestic_distance = pd.read_csv('../Dataset/Hurestic_distance-Indian-cities.csv')
-G = nx.Graph()
+G = nx.DiGraph()
 
 # create a graph form csv to make digestable for algorithm
 networkGraph = {}
@@ -98,7 +123,7 @@ for _,row in datafile.iterrows():
 plt.figure(figsize=(14,10))
 
 #position nodes
-pos = nx.spring_layout(G,k=0.3,seed=42)
+pos = nx.spring_layout(G,k=5,seed=1)
 
 # draw nodes
 nx.draw_networkx_nodes(G,pos,node_size=500, node_color='skyblue')
@@ -116,10 +141,10 @@ nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8)
 # display
 plt.axis("off")
 plt.tight_layout()
-# plt.show(block=False)
-# # show plot for 10 sec and then close 
-# plt.pause(10)
-# plt.close()
+plt.show(block=False)
+# show plot for 10 sec and then close 
+plt.pause(10)
+plt.close()
 
 
 
@@ -137,6 +162,9 @@ DummyGraph = {
     "H": []
 }
 
-UniformCostSearch(networkGraph, "Patna" , "Thiruvananthapuram")
+# UniformCostSearch(networkGraph, "Patna" , "Thiruvananthapuram")
 
-AStar(networkGraph,hurestic_graph,"Patna" , "Thiruvananthapuram")
+# AStar(networkGraph,hurestic_graph,"Patna" , "Thiruvananthapuram")
+
+
+dfs(networkGraph,"Patna","Thiruvananthapuram")
